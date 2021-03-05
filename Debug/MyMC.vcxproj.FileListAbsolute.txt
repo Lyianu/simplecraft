@@ -1,0 +1,2 @@
+D:\Visual Studio\repos\MyMC\Debug\MyMC.exe
+D:\Visual Studio\repos\MyMC\Debug\MyMC.pdb
