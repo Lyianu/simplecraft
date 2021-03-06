@@ -1,6 +1,8 @@
 #ifndef GAME_WINDOW_H
 #define GAME_WINDOW_H
 
+#define GAME_NAME "SimpleCraft"
+
 #define FOVgame 90
 #define ScreenWidth 1024
 #define ScreenHeight 768
@@ -9,16 +11,18 @@
 #define X_LIMIT 64
 #define Z_LIMIT 64
 #define Y_LIMIT 64
-#define DRAW_DISTANCE 10
+#define DRAW_DISTANCE 15
 
 #define DEV_MODE
 #define NO_VERBOSE
 
 //#define SEED 123
-static int SEED = 123;
+static int SEED = 1234;
 
 const float rev_pi = 57.29578049;	//the number for 180 / pi
-#define aspect_ratio ScreenWidth / ScreenHeight
+#define aspect_ratio ((float)ScreenWidth / (float)ScreenHeight)
+#define FOVx (FOVgame * aspect_ratio)
+//int aspect_ratio = ScreenWidth / ScreenHeight;
 
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
@@ -238,6 +242,9 @@ void checkBlockVisibility(int x, int y, int z);
 int perlin2d(int x, int z, int seed);
 float smooth(float t);
 void outputHeightMap(int x, int z);
+void drawCrosshair();
+void fillCrosshairTexture();
+bool isChunkVisible(int x, int z);
 
 
 #endif

@@ -26,8 +26,8 @@ int levelMap[X_LIMIT][Y_LIMIT][Z_LIMIT];
 
 extern float test[200];
 
-GLfloat vertex_positions[50][144];
-GLfloat texture_positions[50][72];
+GLfloat vertex_positions[128][144];
+GLfloat texture_positions[128][72];
 
 chunk firstchunk;	//first chunk generated.(begining of the list)
 chunk *lastChunkPtr;
@@ -38,16 +38,17 @@ int framecount = 0;
 double lastTime = 0;
 int main()
 {
+	//cout << aspect_ratio << endl;
+	//PerlinNoise pn(SEED);
+	//for (int i = 0; i < 10; i++) {
+	//	for (int k = 0; k < 10; k++)
+	//		cout << 10 + 50 * pn.noise(i * 16, k * 16, 0.8) << ' ';
+	//	cout << endl;
 
-	PerlinNoise pn(SEED);
-	for (int i = 0; i < 10; i++) {
-		for (int k = 0; k < 10; k++)
-			cout << 10 + 50 * pn.noise(i * 16, k * 16, 0.8) << ' ';
-		cout << endl;
-
-	}
+	//}
 	//cin >> SEED;
 	InitBlocks();
+	fillCrosshairTexture();
 	omp_set_num_threads(8);
 	firstchunk = generateChunk(0, 0);
 	firstchunk.id = 0;
@@ -105,8 +106,17 @@ int main()
 
 		for (int i = 0; i < DRAW_DISTANCE; i++)
 			for (int j = 0; j < DRAW_DISTANCE; j++) {
-				renderChunk(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j);
+				//if (isChunkVisible(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j))
+					//cout << 1;
+					renderChunk(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j);
 			}
+
+
+		drawCrosshair();
+
+
+
+
 		//cout << "second chunk id: " << firstchunk.next->id << endl;
 		//renderChunk(0, 0);
 
@@ -141,11 +151,7 @@ int main()
 
 
 	}
-	for (int i = 1; i < 10; i++) {
-		for (int j = 1; j < 10; j++)
-			cout << perlin2d(i, j, SEED) << ' ';
-		cout << endl;
-	}
+
 
 
 	//deleteList();

@@ -17,8 +17,8 @@ GLuint mv_location;
 GLuint shadow_location;
 
 extern float camYaw, camPitch, mouse_sensitivity;
-extern GLfloat vertex_positions[50][144];
-extern GLfloat texture_positions[50][72];
+extern GLfloat vertex_positions[128][144];
+extern GLfloat texture_positions[128][72];
 
 //vec3 camAngle;
 //vec3 playerPos;
@@ -74,8 +74,8 @@ GLuint InitShaders() {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	extern GLfloat vertex_positions[50][144];
-	extern GLfloat texture_positions[50][72];
+
+
 	GLuint v_buffer;
 	glCreateBuffers(1, &v_buffer);
 	glNamedBufferStorage(v_buffer, sizeof(vertex_positions), vertex_positions, GL_MAP_WRITE_BIT);
@@ -302,14 +302,14 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 extern vec3 camPos;
 extern int FOV_realtime;
-mat4 proj_mat = projection4fv(FOVgame, 1.25, 0.1, 1000);
+mat4 proj_mat = projection4fv(FOVgame, 1.34, 0.1, 1000);
 void drawBlock(int x, int y, int z, int id) {
 	if (!id)
 		return;
 	mat4 fin_mat = lookat4fv(camYaw, camPitch, camPos.x, camPos.y, camPos.z);
 	glUniformMatrix4fv(mv_location, 1, GL_FALSE, translate4fv(x, y, z) *fin_mat);
 	glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_mat);
-	glUniformMatrix4fv(shadow_location, 1, GL_FALSE, proj_mat);
+	//glUniformMatrix4fv(shadow_location, 1, GL_FALSE, proj_mat);
 	glDrawArrays(GL_TRIANGLES, 36 * id, 36);
 }
 
@@ -326,11 +326,80 @@ void showFPS(GLFWwindow* window) {
 		double fps = double(framecount) / delta;
 
 		std::stringstream ss;
-		ss << "Hello World" << " " << " [" << fps << " FPS]" << "X:" << camPos.x << " Y:" << camPos.y << " Z:" << camPos.z ;
+		ss << GAME_NAME << " " << " [" << fps << " FPS]" << "X:" << camPos.x << " Y:" << camPos.y << " Z:" << camPos.z ;
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
 		framecount = 0;
 		lastTime = currentTime;
 	}
+}
+
+void fillCrosshairTexture() {
+	extern GLfloat vertex_positions[128][144];
+	extern GLfloat texture_positions[128][72];
+	GLfloat oneinfifteen = 1.0f / 30.0f;	//halved							//	1		2/3'
+	vertex_positions[127][0] = -oneinfifteen / aspect_ratio;					//	3/2'	1'
+	vertex_positions[127][1] = oneinfifteen;
+	vertex_positions[127][2] = 0.5f;
+	vertex_positions[127][3] = 1.0f;
+
+	vertex_positions[127][4] = oneinfifteen / aspect_ratio;		//2
+	vertex_positions[127][5] = oneinfifteen;
+	vertex_positions[127][6] = 0.5f;
+	vertex_positions[127][7] = 1.0f;
+
+	vertex_positions[127][8] = -oneinfifteen / aspect_ratio;		//3
+	vertex_positions[127][9] = -oneinfifteen;
+	vertex_positions[127][10] = 0.5f;
+	vertex_positions[127][11] = 1.0f;
+
+
+
+	vertex_positions[127][12] = oneinfifteen / aspect_ratio;		//1'
+	vertex_positions[127][13] = oneinfifteen;
+	vertex_positions[127][14] = 0.5f;
+	vertex_positions[127][15] = 1.0f;
+
+	vertex_positions[127][16] = oneinfifteen / aspect_ratio;		//2'
+	vertex_positions[127][17] = -oneinfifteen;
+	vertex_positions[127][18] = 0.5f;			
+	vertex_positions[127][19] = 1.0f;	
+
+	vertex_positions[127][20] = -oneinfifteen / aspect_ratio;		//3'
+	vertex_positions[127][21] = -oneinfifteen;
+	vertex_positions[127][22] = 0.5f;
+	vertex_positions[127][23] = 1.0f;
+
+	
+
+
+	float oneinsixteen = 1.0f / 16.0f;
+	texture_positions[127][0] = 12 * oneinsixteen;	//1
+	texture_positions[127][1] = 13 * oneinsixteen;
+
+	texture_positions[127][2] = 13 * oneinsixteen;		//2
+	texture_positions[127][3] = 13 * oneinsixteen;
+
+	texture_positions[127][4] = 12 * oneinsixteen;		//3
+	texture_positions[127][5] = 14 * oneinsixteen;
+
+	texture_positions[127][6] = 13 * oneinsixteen;		//1'
+	texture_positions[127][7] = 13 * oneinsixteen;
+
+	texture_positions[127][8] = 13 * oneinsixteen;		//2'
+	texture_positions[127][9] = 14 * oneinsixteen;
+
+	texture_positions[127][10] = 12 * oneinsixteen;		//3'
+	texture_positions[127][11] = 14 * oneinsixteen;
+
+}
+
+mat4 IdentityMat4fv(vec4(1.0f, 0, 0, 0), vec4(0, 1.0f, 0, 0), vec4(0, 0, 1.0f, 0), vec4(0, 0, 0, 1.0f));
+void drawCrosshair() {
+
+	glUniformMatrix4fv(mv_location, 1, GL_FALSE, IdentityMat4fv);
+	glUniformMatrix4fv(proj_location, 1, GL_FALSE, IdentityMat4fv);
+	//glUniformMatrix4fv(shadow_location, 1, GL_FALSE, proj_mat);
+	glDrawArrays(GL_TRIANGLES, 127 * 36, 6);
 }

@@ -143,8 +143,8 @@ void InitBlocks() {
 
 float test[200];
 
-extern GLfloat vertex_positions[50][144];
-extern GLfloat texture_positions[50][72];
+extern GLfloat vertex_positions[128][144];
+extern GLfloat texture_positions[128][72];
 
 void fillBlockTexture(int id, int sideOffsetX, int sideOffsetY, int topOffsetX, int topOffsetY, int bottomOffsetX, int bottomOffsetY) {	//offsetX is the horizontal offset starting from left, offsetY is the vertical offset starting from up
 	memcpy(vertex_positions + id, vertices_of_block_norm, 576);		//size of 144 floats

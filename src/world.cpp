@@ -256,10 +256,10 @@ chunk generateChunk(int x, int z) {
 	//h11 = 2 * z;
 
 	PerlinNoise pn(SEED);
-	h00 = 10 + 80 * pn.noise(sx, sz, 0.8);
-	h01 = 10 + 80 * pn.noise(sx + 1, sz, 0.8);
-	h10 = 10 + 80 * pn.noise(sx, sz + 1, 0.8);
-	h11 = 10 + 80 * pn.noise(sx + 1, sz + 1, 0.8);
+	h00 = 10 + 80 * pn.noise(0.3 * sx, 0.3 * sz, 0.8);
+	h01 = 10 + 80 * pn.noise(0.3 * (sx + 1), 0.3 * sz, 0.8);
+	h10 = 10 + 80 * pn.noise(0.3 * sx, 0.3 * (sz + 1), 0.8);
+	h11 = 10 + 80 * pn.noise(0.3 * (sx + 1), 0.3 * (sz + 1), 0.8);
 
 
 	chunk result;
@@ -305,10 +305,10 @@ chunk generateChunk(int x, int z) {
 	
 	float tempMap[16][16];		//biome
 
-	tempMap[0][0] = pn.noise(sx, sz, 0.1);
-	tempMap[15][0] = pn.noise(sx + 1, sz, 0.1);
-	tempMap[0][15] = pn.noise(sx, sz + 1, 0.1);
-	tempMap[15][15] = pn.noise(sx + 1, sz + 1, 0.1);
+	tempMap[0][0] = pn.noise(0.05 * sx, 0.05 * sz, 0.1);
+	tempMap[15][0] = pn.noise(0.05 * (sx + 1), 0.05 * sz, 0.1);
+	tempMap[0][15] = pn.noise(0.05 * sx, 0.05 * (sz + 1), 0.1);
+	tempMap[15][15] = pn.noise(0.05 * (sx + 1), 0.05 * (sz + 1), 0.1);
 	for (int i = 1; i < 15; i++) {
 		tempMap[0][i] = ((15.5f - i) * tempMap[0][0] + (i + 0.5f) * tempMap[0][15]) / 16.0f;
 		tempMap[15][i] = ((15.5f - i) * tempMap[15][0] + (i + 0.5f) * tempMap[15][15]) / 16.0f;
@@ -386,17 +386,29 @@ chunk generateChunk(int x, int z) {
 
 	for (int ix = 0; ix < 16; ix++)
 		for (int iy = 1; iy < 256; iy++) {
-			if (!isTransparent(result.data[ix][iy][0]) && isTransparent(result.data[ix][iy + 1][0]))
+			if (!isTransparent(result.data[ix][iy][0]) && isTransparent(result.data[ix][iy + 1][0])) {
 				result.visibility[ix][iy][0] = true;
-			if (!isTransparent(result.data[ix][iy][15]) && isTransparent(result.data[ix][iy + 1][15]))
+				result.visibility[ix][iy - 1][0] = true;
+			}
+			if (!isTransparent(result.data[ix][iy][15]) && isTransparent(result.data[ix][iy + 1][15])) {
 				result.visibility[ix][iy][15] = true;
+				result.visibility[ix][iy - 1][15] = true;
+
+			}
 		}
 	for (int iz = 0; iz < 16; iz++)
 		for (int iy = 1; iy < 256; iy++) {
-			if (!isTransparent(result.data[0][iy][iz]) && isTransparent(result.data[0][iy + 1][iz]))
+			if (!isTransparent(result.data[0][iy][iz]) && isTransparent(result.data[0][iy + 1][iz])) {
 				result.visibility[0][iy][iz] = true;
-			if (!isTransparent(result.data[15][iy][iz]) && isTransparent(result.data[15][iy + 1][iz]))
+				result.visibility[0][iy - 1][iz] = true;
+
+			}
+			if (!isTransparent(result.data[15][iy][iz]) && isTransparent(result.data[15][iy + 1][iz])) {
 				result.visibility[15][iy][iz] = true;
+				result.visibility[15][iy - 1][iz] = true;
+
+
+			}
 		}
 
 //#pragma omp parallel for
@@ -620,4 +632,25 @@ void outputHeightMap(int x, int z) {
 		}
 		cout << endl;
 	}
+}
+
+extern vec3 camPos;
+extern vec3 D;
+bool isChunkVisible(int x, int z) {		//is chunk within the 2D frustum
+	vec2 cam(camPos.x, camPos.z);
+	vec2 c1(16 * x, 16 * z), c2(16 * x + 16, 16 * z), c3(16 * x, 16 * z + 16), c4(16 * x + 16, 16 * z + 16);
+	float cAngle = -atanf(D.z / D.x);
+	c1 = c1 - cam; c2 = c2 - cam; c3 = c3 - cam; c4 = c4 - cam;
+	float a1 = atanf(c1.x / c1.y), a2 = atanf(c2.x / c2.y), a3 = atanf(c3.x / c3.y), a4 = atanf(c4.x / c4.y);
+	float half_view = deg2rad(FOVx / 2);
+	float left = cAngle + half_view, right = cAngle - half_view;
+	if (a1 < left && a1 > right)
+		return true;
+	if (a2 < left && a2 > right)
+		return true;
+	if (a3 < left && a3 > right)
+		return true;
+	if (a4 < left && a4 > right)
+		return true;
+	return false;
 }
