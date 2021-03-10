@@ -3,6 +3,7 @@
 #include<GLFW/glfw3.h>
 #include<game.h>
 #include<cmath>
+#include<ctime>
 #include<irrKlang.h>
 using namespace std;
 
@@ -18,6 +19,8 @@ extern irrklang::ISoundEngine* soundEngine;
 
 bool Mouse1isPressed = false, Mouse2isPressed = false;
 void onUpdate() {	//the function updates the general status of the game
+    tickUpdate();
+    //textureUpdate();
     processInput(window);
     
 
@@ -35,7 +38,8 @@ void onUpdate() {	//the function updates the general status of the game
         D.x /= norm; D.y /= norm; D.z /= norm;
         tmp = D * i * 0.1f + camPos;
         tmp.x = roundf(tmp.x); tmp.y = roundf(tmp.y); tmp.z = roundf(tmp.z);    //the blocks are rendered -0.5~+0.5 relatively
-        if (getBlockID(tmp.x, tmp.y, tmp.z) != 0 && getBlockID(tmp.x, tmp.y, tmp.z) != -1) {
+        int blockID = getBlockID(tmp.x, tmp.y, tmp.z);
+        if (blockID != 0 && blockID != -1 && blockID != 9) {
             getBlockFlag = true;
             drawBlock(tmp.x, tmp.y, tmp.z, 49);
             break;
@@ -257,4 +261,8 @@ void processInput(GLFWwindow* window)
 
 
     D.y = Dy;
+}
+
+void tickUpdate() {
+    tick = clock() * TPS / 1000;
 }

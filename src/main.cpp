@@ -8,18 +8,26 @@
 #include<irrKlang.h>
 #include<PerlinNoise.h>
 #include<ppm.h>
+#include<Windows.h>
 
 #include<iostream>
 using namespace std;
 
 extern GLFWwindow* window;
 
-short playerInventory[41] = { 0, 1, 2, 3, 4, 5, 7, 12, 14, 17, 18 };		//not using 0
+short playerInventory[41] = { 0, 31, 37, 38, 4, 5, 7, 12, 14, 17, 18 };		//not using 0
 int currentItemSlot = 1;
 vec3 camPos;
 float camYaw = 0.01;	//in degree
 float camPitch = 0.01;
 float mouse_sensitivity = 0.05;
+
+int SEED = 0;
+int tick = 0;
+
+
+
+
 int FOV_realtime = FOVgame;
 
 int levelMap[X_LIMIT][Y_LIMIT][Z_LIMIT];
@@ -40,16 +48,22 @@ int main()
 {
 	//cout << aspect_ratio << endl;
 	//PerlinNoise pn(SEED);
-	//for (int i = 0; i < 10; i++) {
-	//	for (int k = 0; k < 10; k++)
-	//		cout << 10 + 50 * pn.noise(i * 16, k * 16, 0.8) << ' ';
-	//	cout << endl;
+	//float min = 5, max = -5;
+	//for (int i = 0; i < 100; i++) {
+	//	for (int k = 0; k < 1000; k++) {
+	//		if (min > pn.noise(i, k, k))
+	//			min = pn.noise(i, k, k);
+	//		if (max < pn.noise(i, k, k))
+	//			max = pn.noise(i, k, k);
+	//	}
 
 	//}
-	//cin >> SEED;
+	//	cout << min << ' ' << max << endl;
+	cin >> SEED;
+	//SEED = 2;
 	InitBlocks();
 	fillCrosshairTexture();
-	omp_set_num_threads(8);
+	//omp_set_num_threads(1);
 	firstchunk = generateChunk(0, 0);
 	firstchunk.id = 0;
 	firstchunk.before = &firstchunk;
@@ -105,12 +119,32 @@ int main()
 		onUpdate();
 
 		for (int i = 0; i < DRAW_DISTANCE; i++)
+//#pragma omp parallel for
 			for (int j = 0; j < DRAW_DISTANCE; j++) {
+				//cout << "Thread: " << omp_get_thread_num() << " Job: " << (int)camPos.x / 16 - DRAW_DISTANCE / 2 + i << ' ' <<  (int)camPos.z / 16 - DRAW_DISTANCE / 2 + j << endl;
 				//if (isChunkVisible(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j))
 					//cout << 1;
 					renderChunk(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j);
 			}
 
+		for (int i = 0; i < DRAW_DISTANCE; i++)
+			//#pragma omp parallel for
+			for (int j = 0; j < DRAW_DISTANCE; j++) {
+				//cout << "Thread: " << omp_get_thread_num() << " Job: " << (int)camPos.x / 16 - DRAW_DISTANCE / 2 + i << ' ' <<  (int)camPos.z / 16 - DRAW_DISTANCE / 2 + j << endl;
+				//if (isChunkVisible(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j))
+					//cout << 1;
+				renderWater(camPos.x / 16 - DRAW_DISTANCE / 2 + i, camPos.z / 16 - DRAW_DISTANCE / 2 + j);
+			}
+
+		//renderChunk(camPos.x / 16 + 1, camPos.z / 16 + 1);
+		//renderChunk(camPos.x / 16 + 1, camPos.z / 16 - 1);
+		//renderChunk(camPos.x / 16 - 1, camPos.z / 16 + 1);
+		//renderChunk(camPos.x / 16 - 1, camPos.z / 16 - 1);
+		//renderChunk(camPos.x / 16 + 1, camPos.z / 16);
+		//renderChunk(camPos.x / 16, camPos.z / 16 + 1);
+		//renderChunk(camPos.x / 16 - 1, camPos.z / 16);
+		//renderChunk(camPos.x / 16, camPos.z / 16 - 1);
+		//renderChunk(camPos.x / 16, camPos.z / 16);
 
 		drawCrosshair();
 

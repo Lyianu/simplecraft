@@ -29,7 +29,7 @@ void InitWindow() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	window = glfwCreateWindow(1024, 768, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(1024, 768, GAME_NAME, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -46,6 +46,9 @@ void InitWindow() {
 }
 
 //enabling all the things for rendering
+//void* texture_buffer_pointer;
+	GLuint v_buffer;
+	GLuint t_buffer;	//stores texture coordinate
 GLuint InitShaders() {
 	extern const GLchar *vss;
 	extern const GLchar *fss;
@@ -76,14 +79,12 @@ GLuint InitShaders() {
 
 
 
-	GLuint v_buffer;
 	glCreateBuffers(1, &v_buffer);
 	glNamedBufferStorage(v_buffer, sizeof(vertex_positions), vertex_positions, GL_MAP_WRITE_BIT);
 	glVertexArrayVertexBuffer(vao, 0, v_buffer, 0, sizeof(vec4));
 	glVertexArrayAttribFormat(vao, 0, 4, GL_FLOAT, GL_FALSE, 0);
 	glEnableVertexArrayAttrib(vao, 0);
 
-	GLuint t_buffer;	//stores texture coordinate
 	glCreateBuffers(1, &t_buffer);
 	glNamedBufferStorage(t_buffer, sizeof(texture_positions), texture_positions, GL_MAP_WRITE_BIT);
 	glVertexArrayVertexBuffer(vao, 1, t_buffer, 0, 8);	//8 is the size of vec2
@@ -142,12 +143,14 @@ GLuint InitShaders() {
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);	//line mode for debugging purpose
 
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
 	glEnable(GL_CULL_FACE);
-	glFrontFace(GL_CCW);
+	//glFrontFace(GL_CCW);
 	glCullFace(GL_FRONT);
 
 	return program;
@@ -214,6 +217,10 @@ mat4 projection4fv(float fovy, float aspect, float near, float far) {
 	left = -right;
 
 	return frustum4fv(left, right, bottom, top, near, far);
+}
+
+mat4 scale4fv(float S_x, float S_y, float S_z) {
+	return mat4(vec4(S_x, 0, 0, 0), vec4(0, S_y, 0, 0), vec4(0, 0, S_z, 0), vec4(0, 0, 0, 1));
 }
 
 mat4 rotation4fv(float angle_x, float angle_y, float angle_z) {
@@ -302,15 +309,31 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 
 extern vec3 camPos;
 extern int FOV_realtime;
-mat4 proj_mat = projection4fv(FOVgame, 1.34, 0.1, 1000);
+mat4 proj_mat = projection4fv(FOVgame, 1.34, 0.1, 10000);
 void drawBlock(int x, int y, int z, int id) {
 	if (!id)
 		return;
 	mat4 fin_mat = lookat4fv(camYaw, camPitch, camPos.x, camPos.y, camPos.z);
+
+	//if (id == 9)
+	//	fin_mat = lookat4fv(camYaw, camPitch, camPos.x, camPos.y, camPos.z) * scale4fv(1, 1, 1);
 	glUniformMatrix4fv(mv_location, 1, GL_FALSE, translate4fv(x, y, z) *fin_mat);
 	glUniformMatrix4fv(proj_location, 1, GL_FALSE, proj_mat);
+	glVertexAttrib4fv(2, vec4(0, 0, 0, 0));
+	//glVertexAttrib4fv(2, vec4(1 - y * 0.05,1 -  y * 0.05,1 -  y * 0.05, 0));
+	if (id == 31) {
+
+		glDrawArrays(GL_TRIANGLES, 36 * id, 24);
+		return;
+	}
+	glDrawArrays(GL_TRIANGLES, 36 * id + 30, 6);
+	if (id == 9)
+		return;
+	glVertexAttrib4fv(2, vec4(0.15, 0.15, 0.15, 0));
 	//glUniformMatrix4fv(shadow_location, 1, GL_FALSE, proj_mat);
-	glDrawArrays(GL_TRIANGLES, 36 * id, 36);
+	glDrawArrays(GL_TRIANGLES, 36 * id, 24);
+	glVertexAttrib4fv(2, vec4(0.3, 0.3, 0.3, 0));
+	glDrawArrays(GL_TRIANGLES, 36 * id + 24, 6);
 }
 
 extern int framecount;
@@ -326,7 +349,7 @@ void showFPS(GLFWwindow* window) {
 		double fps = double(framecount) / delta;
 
 		std::stringstream ss;
-		ss << GAME_NAME << " " << " [" << fps << " FPS]" << "X:" << camPos.x << " Y:" << camPos.y << " Z:" << camPos.z ;
+		ss << GAME_NAME << " " << GAME_VERSION << " [" << fps << " FPS]" << "X:" << camPos.x << " Y:" << camPos.y << " Z:" << camPos.z ;
 
 		glfwSetWindowTitle(window, ss.str().c_str());
 
@@ -402,4 +425,21 @@ void drawCrosshair() {
 	glUniformMatrix4fv(proj_location, 1, GL_FALSE, IdentityMat4fv);
 	//glUniformMatrix4fv(shadow_location, 1, GL_FALSE, proj_mat);
 	glDrawArrays(GL_TRIANGLES, 127 * 36, 6);
+}
+
+void textureUpdate() {
+	int set = (tick % 20) / 4;
+	switch (set) {
+		case 0:fillBlockTexture(9, 13, 12, 13, 12, 13, 12); break;
+		case 1:fillBlockTexture(9, 14, 12, 14, 12, 14, 12); break;
+		case 2:fillBlockTexture(9, 15, 12, 15, 12, 15, 12); break;
+		case 3:fillBlockTexture(9, 14, 13, 14, 13, 14, 13); break;
+		case 4:fillBlockTexture(9, 15, 13, 15, 13, 15, 13); break;
+	}
+	//texture_buffer_pointer = glMapNamedBufferRange(t_buffer, 0, sizeof(texture_positions), GL_WRITE_ONLY);
+	void *texture_buffer_pointer = glMapNamedBuffer(t_buffer, GL_WRITE_ONLY);
+	memcpy(texture_buffer_pointer, texture_positions, sizeof(texture_positions));
+	glUnmapNamedBuffer(t_buffer);
+	cout << set << endl;
+	//glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(texture_positions), texture_positions);
 }

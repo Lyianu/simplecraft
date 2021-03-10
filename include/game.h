@@ -2,22 +2,25 @@
 #define GAME_WINDOW_H
 
 #define GAME_NAME "SimpleCraft"
+#define GAME_VERSION "dev 0.1.1b"
 
 #define FOVgame 90
 #define ScreenWidth 1024
 #define ScreenHeight 768
 #define PI 3.1415926
 
+#define TPS 20
 #define X_LIMIT 64
 #define Z_LIMIT 64
 #define Y_LIMIT 64
-#define DRAW_DISTANCE 15
+#define DRAW_DISTANCE 10
 
 #define DEV_MODE
 #define NO_VERBOSE
 
 //#define SEED 123
-static int SEED = 1234;
+extern int SEED;
+extern int tick;
 
 const float rev_pi = 57.29578049;	//the number for 180 / pi
 #define aspect_ratio ((float)ScreenWidth / (float)ScreenHeight)
@@ -43,6 +46,7 @@ struct chunk {
 	int x, z;				//x = (int)camPos.x / 16
 	short data[16][256][16];
 	bool visibility[16][256][16];
+	float tempMap[16][16];
 	chunk* before;
 	chunk* next;
 
@@ -245,6 +249,11 @@ void outputHeightMap(int x, int z);
 void drawCrosshair();
 void fillCrosshairTexture();
 bool isChunkVisible(int x, int z);
+mat4 scale4fv(float S_x, float S_y, float S_z);
+void tickUpdate();
+void renderWater(int x, int z);
+void textureUpdate();
+void fillCrossTexture(int id, int offsetX, int offsetY);
 
 
 #endif

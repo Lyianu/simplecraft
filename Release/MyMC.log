@@ -1,19 +1,49 @@
-﻿  gameWindow.cpp
-D:\Visual Studio\repos\MyMC\include\game.h(22,33): warning C4305: “初始化”: 从“double”到“float”截断
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(198,26): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(199,26): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(204,32): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(284,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(285,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(299,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(300,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(305,55): warning C4305: “参数”: 从“double”到“float”截断
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(310,66): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(310,63): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-D:\Visual Studio\repos\MyMC\src\gameWindow.cpp(310,60): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+﻿  world.cpp
+D:\Visual Studio\repos\MyMC\include\game.h(25,33): warning C4305: “初始化”: 从“double”到“float”截断
+D:\Visual Studio\repos\MyMC\src\world.cpp(26,34): warning C4554: “<<”: 检查运算符优先级是否存在的可能的错误；使用括号阐明优先级
+D:\Visual Studio\repos\MyMC\src\world.cpp(56,10): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(56,31): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(64,13): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(66,16): warning C4244: “return”: 从“float”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(103,33): warning C4554: “<<”: 检查运算符优先级是否存在的可能的错误；使用括号阐明优先级
+D:\Visual Studio\repos\MyMC\src\world.cpp(108,15): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(259,11): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(260,11): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(261,11): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(262,11): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(283,67): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(284,68): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(288,85): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(308,26): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(309,27): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(310,27): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(311,28): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(320,67): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(344,70): warning C4244: “=”: 从“float”转换到“short”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(193,21): warning C4101: “hWest”: 未引用的局部变量
+D:\Visual Studio\repos\MyMC\src\world.cpp(193,14): warning C4101: “hEast”: 未引用的局部变量
+D:\Visual Studio\repos\MyMC\src\world.cpp(193,6): warning C4101: “hNorth”: 未引用的局部变量
+D:\Visual Studio\repos\MyMC\src\world.cpp(193,28): warning C4101: “hSouth”: 未引用的局部变量
+D:\Visual Studio\repos\MyMC\src\world.cpp(193,36): warning C4101: “hCenter”: 未引用的局部变量
+D:\Visual Studio\repos\MyMC\src\world.cpp(570,12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(571,12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(572,12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(573,12): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(576,39): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(579,39): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(582,39): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(585,39): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,21): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,13): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,46): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,37): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,70): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,58): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,100): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:\Visual Studio\repos\MyMC\src\world.cpp(700,87): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
   正在生成代码
-  0 of 497 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+  1 of 499 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+    10 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
   MyMC.vcxproj -> D:\Visual Studio\repos\MyMC\Release\MyMC.exe

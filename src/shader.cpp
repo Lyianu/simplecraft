@@ -6,8 +6,11 @@ const GLchar *vss = {
 	"								\n"
 	"layout (location = 0) in vec4 data;								\n"
 	"layout (location = 1) in vec2 sTexCoord;								\n"		//s for source
+	"layout (location = 2) in vec4 bright;								\n"
 	"								\n"
 	"out vec2 TexCoord;								\n"
+	"out vec4 vBright;								\n"
+
 	//"out VS_OUT { vec4 shadow_coord;} vs_out;								\n"		
 	"								\n"	
 	"uniform mat4 mv_matrix;								\n"
@@ -19,6 +22,7 @@ const GLchar *vss = {
 	"{								\n"
 	"	gl_Position = proj_matrix * mv_matrix * data;							\n"
 	"	TexCoord = sTexCoord;							\n"	
+	"	vBright = bright;							\n"
 	//"	vs_out.shadow_coord = proj_matrix * data;							\n"	
 	"								\n"		
 	"}								\n"
@@ -34,6 +38,7 @@ const GLchar* fss = {
 		//"out vec4 color;								\n"
 
 		"in vec2 TexCoord;								\n"
+		"in vec4 vBright;								\n"
 		//"in VS_OUT {vec4 shadow_coord;} fs_in;								\n"
 		"								\n"
 		"uniform sampler2D sTexture;								\n"
@@ -49,7 +54,8 @@ const GLchar* fss = {
 		"		discard;						\n"
 
 		//"	color = textureProj(shadow_tex, fs_in.shadow_coord) * vec4(1.0)								\n"
-		"	FragColor = tex;							\n"
+		"	FragColor = tex - vBright;							\n"
+		//"FragColor = tex;"
 		"}								\n"
 		"								\n"
 		"								\n"

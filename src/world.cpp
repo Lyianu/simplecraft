@@ -256,10 +256,10 @@ chunk generateChunk(int x, int z) {
 	//h11 = 2 * z;
 
 	PerlinNoise pn(SEED);
-	h00 = 10 + 80 * pn.noise(0.3 * sx, 0.3 * sz, 0.8);
-	h01 = 10 + 80 * pn.noise(0.3 * (sx + 1), 0.3 * sz, 0.8);
-	h10 = 10 + 80 * pn.noise(0.3 * sx, 0.3 * (sz + 1), 0.8);
-	h11 = 10 + 80 * pn.noise(0.3 * (sx + 1), 0.3 * (sz + 1), 0.8);
+	h00 = 20 + 90 * pn.noise(0.3 * sx, 0.3 * sz, 0.8);
+	h01 = 20 + 90 * pn.noise(0.3 * (sx + 1), 0.3 * sz, 0.8);
+	h10 = 20 + 90 * pn.noise(0.3 * sx, 0.3 * (sz + 1), 0.8);
+	h11 = 20 + 90 * pn.noise(0.3 * (sx + 1), 0.3 * (sz + 1), 0.8);
 
 
 	chunk result;
@@ -313,6 +313,8 @@ chunk generateChunk(int x, int z) {
 		tempMap[0][i] = ((15.5f - i) * tempMap[0][0] + (i + 0.5f) * tempMap[0][15]) / 16.0f;
 		tempMap[15][i] = ((15.5f - i) * tempMap[15][0] + (i + 0.5f) * tempMap[15][15]) / 16.0f;
 	}
+	memcpy(&result.tempMap, tempMap, sizeof(tempMap));
+
 	for (int ix = 1; ix < 15; ix++)
 		for (int iz = 0; iz < 16; iz++) {
 			tempMap[ix][iz] = (15.5f - ix) / 16.0f * (float)tempMap[0][iz] + ((ix + 0.5) / 16.0f) * (float)tempMap[15][iz];
@@ -368,6 +370,7 @@ chunk generateChunk(int x, int z) {
 	//				result.visibility[ix][iy][iz] = false;
 	//		}
 
+
 	for (int ix = 0; ix < 16; ix++)
 		for (int iy = 0; iy < 256; iy++)
 			for (int iz = 0; iz < 16; iz++)
@@ -410,6 +413,79 @@ chunk generateChunk(int x, int z) {
 
 			}
 		}
+	for (int ix = 0; ix < 16; ix++)
+		for (int iz = 0; iz < 16; iz++)
+			for (int iy = 0; iy < 64; iy++)
+				if (!result.data[ix][iy][iz]) {
+					result.data[ix][iy][iz] = 9;
+					if (iy == 63)
+						result.visibility[ix][63][iz] = 1;
+				}
+	/*
+	for (int iy = 3; iy < 256; iy++) {
+		//cout << 1;
+		if (!isTransparent(result.data[7][iy][7]) && isTransparent(result.data[7][iy + 1][7])) {
+			//result.visibility[7][iy][7] = false;
+			result.data[7][iy + 1][7] = 17;
+			result.visibility[7][iy + 1][7] = true;
+			result.data[7][iy + 2][7] = 17;
+			result.visibility[7][iy + 2][7] = true;
+			result.data[7][iy + 3][7] = 17;
+			result.visibility[7][iy + 3][7] = true;
+			result.data[7][iy + 4][7] = 17;
+			result.visibility[7][iy + 4][7] = true;
+
+
+			result.data[7][iy + 5][7] = 18;
+			result.visibility[7][iy + 5][7] = true;
+			result.data[7][iy + 6][7] = 18;
+			result.visibility[7][iy + 6][7] = true;
+
+			result.data[8][iy + 5][7] = 18;
+			result.visibility[8][iy + 5][7] = true;
+			result.data[6][iy + 5][7] = 18;
+			result.visibility[6][iy + 5][7] = true;
+
+			result.data[8][iy + 4][7] = 18;
+			result.visibility[8][iy + 4][7] = true;
+			result.data[6][iy + 4][7] = 18;
+			result.visibility[6][iy + 4][7] = true;
+
+			result.data[7][iy + 5][8] = 18;
+			result.visibility[7][iy + 5][8] = true;
+			result.data[7][iy + 5][6] = 18;
+			result.visibility[7][iy + 5][6] = true;
+
+			result.data[7][iy + 4][6] = 18;
+			result.visibility[7][iy + 4][6] = true;
+			result.data[7][iy + 4][8] = 18;
+			result.visibility[7][iy + 4][8] = true;
+
+			result.data[8][iy + 5][8] = 18;
+			result.visibility[8][iy + 5][8] = true;
+			result.data[8][iy + 4][8] = 18;
+			result.visibility[8][iy + 4][8] = true;
+
+			result.data[6][iy + 5][6] = 18;
+			result.visibility[6][iy + 5][6] = true;
+			result.data[6][iy + 4][6] = 18;
+			result.visibility[6][iy + 4][6] = true;
+
+			result.data[6][iy + 5][8] = 18;
+			result.visibility[6][iy + 5][8] = true;
+			result.data[6][iy + 4][8] = 18;
+			result.visibility[6][iy + 4][8] = true;
+
+			result.data[8][iy + 5][6] = 18;
+			result.visibility[8][iy + 5][6] = true;
+			result.data[8][iy + 4][6] = 18;
+			result.visibility[8][iy + 4][6] = true;
+			//cout << 1;
+		break;
+		}
+	}
+*/
+
 
 //#pragma omp parallel for
 //	for (int ix = 0; ix < 16; ix++)		//shouldn't be performed here cause the chunk is not added to the list yet.
@@ -436,14 +512,32 @@ void renderChunk(int x, int z) {
 
 	int baseX = 16 * x, baseZ = 16 * z;
 //#pragma omp parallel for
-	for (int i = 0; i < 16; i++)
-//#pragma omp parallel for				//disable multi_threading to avoid heap overflow
-		for (int j = 0; j < 256; j++)
+	for (int j = 0; j < 256; j++)
+		for (int i = 0; i < 16; i++)
+			//#pragma omp parallel for				//disable multi_threading to avoid heap overflow
 			for (int k = 0; k < 16; k++)
-				if (currentChunk->visibility[i][j][k])
+				if (currentChunk->visibility[i][j][k] && !isTransparent(currentChunk->data[i][j][k]))
 					drawBlock(baseX + i, j, baseZ + k, currentChunk->data[i][j][k]);
 				//drawBlock(baseX + i, j, baseZ + k, test.data[i][j][k]);
 	//cout << "CHUNKID: " << currentChunk->id << endl;
+}
+
+void renderWater(int x, int z) {
+	//cout << endl << "Rendering: " << x << ' ' << z << endl;
+	chunk* currentChunk = getChunk(x, z);
+	//cout << "X: " << x << " Z: " << z << " ID: " << currentChunk->id << endl;
+	//outputHeightMap(x, z);
+
+	int baseX = 16 * x, baseZ = 16 * z;
+	//#pragma omp parallel for
+	for (int j = 0; j < 256; j++)
+		for (int i = 0; i < 16; i++)
+			//#pragma omp parallel for				//disable multi_threading to avoid heap overflow
+			for (int k = 0; k < 16; k++)
+				if (currentChunk->visibility[i][j][k] && isTransparent(currentChunk->data[i][j][k]))
+					drawBlock(baseX + i, j, baseZ + k, currentChunk->data[i][j][k]);
+	//drawBlock(baseX + i, j, baseZ + k, test.data[i][j][k]);
+//cout << "CHUNKID: " << currentChunk->id << endl;
 }
 
 void deleteList() {		//return all memory to the system
@@ -459,77 +553,40 @@ void deleteList() {		//return all memory to the system
 int getBlockID(int x, int y, int z) {		//get specified block id(what block it is)
 	if (y < 0 || y > 255)
 		return -1;
-	int ix = (x - (x / 16) * 16 + 16) % 16, iz = (z - (z / 16) * 16 + 16) % 16;
+	//int ix = (x - (x / 16) * 16 + 16) % 16, iz = (z - (z / 16) * 16 + 16) % 16;
 	int tx = x / 16, tz = z / 16;
 	if (x < 0)
 		tx--;
 	if (z < 0)
 		tz--;
+	int ix = x - 16 * tx, iz = z - 16 * tz;
 	if (isChunkExist(tx, tz)) {
 		chunk* tmp = getChunk(tx, tz);
 		int id = tmp->data[ix][y][iz];
 		return id;
 	}
 
-	{
-		x /= 16;
-		z /= 16;
-		//x = tx;
-		//z = tz;
-		int h00, h01, h10, h11;		//height for 4 vertices of the chunk
+	PerlinNoise pn(SEED);
+	float h00 = 20 + 90 * pn.noise(0.3 * tx, 0.3 * tz, 0.8);
+	float h01 = 20 + 90 * pn.noise(0.3 * (tx + 1), 0.3 * tz, 0.8);
+	float h10 = 20 + 90 * pn.noise(0.3 * tx, 0.3 * (tz + 1), 0.8);
+	float h11 = 20 + 90 * pn.noise(0.3 * (tx + 1), 0.3 * (tz + 1), 0.8);
+	int height;
+	if (ix == 15) {
+		height = (15.5f - iz) / 16.0f * h10 + ((iz + 0.5) / 16.0f) * h11;
+	}
+	if (ix == 0) {
+		height = (15.5f - iz) / 16.0f * h00 + ((iz + 0.5) / 16.0f) * h01;
+	}
+	if (iz == 0) {
+		height = (15.5f - ix) / 16.0f * h00 + ((ix + 0.5) / 16.0f) * h10;
+	}
+	if (iz == 15) {
+		height = (15.5f - ix) / 16.0f * h01 + ((ix + 0.5) / 16.0f) * h11;
+	}
 
-		int hNorth, hEast, hWest, hSouth, hCenter;		//get all surrounding vertices' height to make the level smoother
 
-		hCenter = heightRng(x, z);
-		hNorth = heightRng(x, z + 1);
-		hEast = heightRng(x + 1, z);
-		hSouth = heightRng(x, z - 1);
-		hWest = heightRng(x - 1, z);
-		h00 = hCenter + hNorth + hEast + hSouth + hWest;
-		h00 /= 4;
-		//h00 = hCenter;
-		h00 += levelGenerateBasis;
-
-		x += 1;
-		hCenter = heightRng(x, z);
-		hNorth = heightRng(x, z + 1);
-		hEast = heightRng(x + 1, z);
-		hSouth = heightRng(x, z - 1);
-		hWest = heightRng(x - 1, z);
-		h01 = hCenter + hNorth + hEast + hSouth + hWest;
-		h01 /= 4;
-		//h01 = hCenter;
-		h01 += levelGenerateBasis;
-
-		z += 1;
-		hCenter = heightRng(x, z);
-		hNorth = heightRng(x, z + 1);
-		hEast = heightRng(x + 1, z);
-		hSouth = heightRng(x, z - 1);
-		hWest = heightRng(x - 1, z);
-		h11 = hCenter + hNorth + hEast + hSouth + hWest;
-		h11 /= 4;
-		//h11 = hCenter;
-		h11 += levelGenerateBasis;
-
-		x -= 1;
-		hCenter = heightRng(x, z);
-		hNorth = heightRng(x, z + 1);
-		hEast = heightRng(x + 1, z);
-		hSouth = heightRng(x, z - 1);
-		hWest = heightRng(x - 1, z);
-		h10 = hCenter + hNorth + hEast + hSouth + hWest;
-		h10 /= 4;
-		//h10 = hCenter;
-		h10 += levelGenerateBasis;
-
-		int squarex1 = ix * ix, squarex2 = (16 - ix) * (16 - ix), squarez1 = iz * iz, squarez2 = (16 - iz) * (16 - iz);
-		int square_sum = squarex1 + squarex2 + squarez1 + squarez2;
-		int height = 0;
-		height += h00 * (float)squarex1 / square_sum + h01 * (float)squarex2 / square_sum + h10 * (float)squarez1 / square_sum + h11 * (float)squarez2 / square_sum;
-		height /= 4;
-
-		if (height >= y)
+		if (height >= y) {
 			return 2;
 	}
 			return 0;
@@ -566,12 +623,13 @@ void addBlock(int x, int y, int z, int id) {
 }
 
 void deleteBlock(int x, int y, int z) {
-	int ix = (x - (x / 16) * 16 + 16) % 16, iz = (z - (z / 16) * 16 + 16) % 16;
+	//int ix = (x - (x / 16) * 16 + 16) % 16, iz = (z - (z / 16) * 16 + 16) % 16;
 	int tx = x / 16, tz = z / 16;
 	if (x < 0)
 		tx--;
 	if (z < 0)
 		tz--;
+	int ix = x - 16 * tx, iz = z - 16 * tz;
 	chunk* tmp = getChunk(tx, tz);
 	cout << "DELETING: " << tmp->id << endl;
 	tmp->data[ix][y][iz] = 0;
@@ -593,19 +651,20 @@ void deleteBlock(int x, int y, int z) {
 void changeBlockVisibility(int x, int y, int z, bool vis) {
 
 	cout << "checking Block:" << x << ' ' << y << ' ' << z << endl;
-	int ix = (x - (x / 16) * 16 + 16) % 16, iz = (z - (z / 16) * 16 + 16) % 16;
+	//int ix = (x - (x / 16) * 16 + 16) % 16, iz = (z - (z / 16) * 16 + 16) % 16;
 	int tx = x / 16, tz = z / 16;
 	if (x < 0)
 		tx--;
 	if (z < 0)
 		tz--;
+	int ix = x - 16 * tx, iz = z - 16 * tz;
 	chunk* tmp = getChunk(tx, tz);
 	tmp->visibility[ix][y][iz] = vis;
 	cout << "changed\n";
 }
 
 bool isTransparent(int id) {
-	if (!id || id == 18 || id == 20)
+	if (!id || id == 18 || id == 20 || id == 9 || id == 31 || id == 37 || id == 38)
 		return true;
 	return false;
 }

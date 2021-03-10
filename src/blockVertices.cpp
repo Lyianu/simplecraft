@@ -104,6 +104,110 @@ static const GLfloat texture_positions_block_norm[] = {
 	1.0 / 16.0, 0,			//top finished
 };
 
+static const GLfloat vertices_of_cross_norm[] =
+{
+	-0.5, 0.5, 0.5, 1.0,
+	0.5, 0.5, -0.5, 1.0,
+	-0.5, -0.5, 0.5, 1.0,
+
+	0.5, 0.5, -0.5, 1.0,
+	0.5, -0.5, -0.5, 1.0,
+	-0.5, -0.5, 0.5, 1.0,
+
+	-0.5, 0.5, -0.5, 1.0,
+	0.5, 0.5, 0.5, 1.0,
+	-0.5, -0.5, -0.5, 1.0,
+
+	0.5, 0.5, 0.5, 1.0,
+	0.5, -0.5, 0.5, 1.0,
+	-0.5, -0.5, -0.5, 1.0,
+
+
+
+	0.5, 0.5, -0.5, 1.0,
+	-0.5, 0.5, 0.5, 1.0,
+	0.5, -0.5, -0.5, 1.0,
+
+	-0.5, 0.5, 0.5, 1.0,
+	-0.5, -0.5, 0.5, 1.0,
+	0.5, -0.5, -0.5, 1.0,
+
+	0.5, 0.5, 0.5, 1.0,
+	-0.5, 0.5, -0.5, 1.0,
+	0.5, -0.5, 0.5, 1.0,
+
+	-0.5, 0.5, -0.5, 1.0,
+	-0.5, -0.5, -0.5, 1.0,
+	0.5, -0.5, 0.5, 1.0
+};
+
+static const GLfloat texture_of_cross_norm[] =
+{
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+	//
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+
+	0, 0,
+	1.0 / 16.0, 0,
+	0, 1.0 / 16.0,
+
+	1.0 / 16.0, 0,
+	1.0 / 16.0, 1.0 / 16.0,
+	0, 1.0 / 16.0,
+};
+
 
 void InitBlocks() {
 	fillBlockTexture(1, 1, 0, 1, 0, 1, 0);		//stone
@@ -113,6 +217,8 @@ void InitBlocks() {
 	fillBlockTexture(5, 4, 0, 4, 0, 4, 0);		//oak plank
 	//6 is oak sapling not implemented yet
 	fillBlockTexture(7, 1, 1, 1, 1, 1, 1);		//bedrock
+	//8 is flowing water
+	fillBlockTexture(9, 13, 12, 13, 12, 13, 12);//still water
 	fillBlockTexture(12, 2, 1, 2, 1, 2, 1);		//sand
 	fillBlockTexture(13, 3, 1, 3, 1, 3, 1);		//gravel
 	fillBlockTexture(14, 0, 2, 0, 2, 0, 2);		//gold ore
@@ -131,10 +237,12 @@ void InitBlocks() {
 	//28	detector rail
 	fillBlockTexture(29, 12, 6, 10, 6, 13, 6);	//sticky piston
 	//30	cobweb
-	//31	grass
+	fillCrossTexture(31, 7, 2);//31	grass
 	//32	fern
 	//33	piston
 	fillBlockTexture(35, 0, 4, 0, 4, 0, 4);	//white wool
+	fillCrossTexture(37, 13, 0);	//dandelion
+	fillCrossTexture(38, 12, 0);	//poppy
 
 	fillBlockTexture(49, 13, 13, 13, 13, 13, 13);	//selected block edge
 }
@@ -183,4 +291,20 @@ void fillBlockTexture(int id, int sideOffsetX, int sideOffsetY, int topOffsetX, 
 	cout << "Finished:" << id << endl;
 	//for (int i = 0; i < 50; i++)
 	//	cout << vertices_of_block_norm[i] << ' ';
+}
+
+void fillCrossTexture(int id, int offsetX, int offsetY) {
+	memcpy(vertex_positions + id, vertices_of_cross_norm, sizeof(vertices_of_cross_norm));
+	memcpy(texture_positions + id, texture_of_cross_norm, sizeof(texture_of_cross_norm));
+	float block_dist = 1.0f / 16.0f;	//width of a block in texture file
+
+	for (int i = 0; i < 8; i++) {
+		texture_positions[id][i * 6] += block_dist * offsetX;
+		texture_positions[id][i * 6 + 1] += block_dist * offsetY;
+		texture_positions[id][i * 6 + 2] += block_dist * offsetX;
+		texture_positions[id][i * 6 + 3] += block_dist * offsetY;
+		texture_positions[id][i * 6 + 4] += block_dist * offsetX;
+		texture_positions[id][i * 6 + 5] += block_dist * offsetY;
+
+	}
 }
